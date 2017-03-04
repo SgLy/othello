@@ -22,9 +22,10 @@ int main()
         } else {
             int x, y;
             if (c == WHITE)
-                ai[c].judge(x, y, t, 7);
+                ai[c].judge(x, y, t, 5);
             else do {
-                scanf("%d%d", &x, &y);
+//                scanf("%d%d", &x, &y);
+                ai[c].judge(x, y, t, 3);
             } while (!t.canPut(x, y, c));
             printf("CHOICE: (%d, %d)\n", x, y);
             t = t.put(x, y, c);

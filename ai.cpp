@@ -15,14 +15,14 @@ AI::AI (chess _self):
     self(_self)
 {
     const int tmp[8][8] = {
-        {9, 8, 7, 6, 6, 7, 8, 9},
-        {8, 8, 3, 2, 2, 3, 8, 8},
+        {9, 5, 7, 6, 6, 7, 5, 9},
+        {5, 1, 3, 2, 2, 3, 1, 5},
         {7, 3, 7, 1, 1, 7, 3, 7},
         {6, 2, 1, 6, 6, 1, 2, 6},
         {6, 2, 1, 6, 6, 1, 2, 6},
         {7, 3, 7, 1, 1, 7, 3, 7},
-        {8, 8, 3, 2, 2, 3, 8, 8},
-        {9, 8, 7, 6, 6, 7, 8, 9}
+        {5, 1, 3, 2, 2, 3, 1, 5},
+        {9, 5, 7, 6, 6, 7, 5, 9}
     };
     memcpy(values, tmp, sizeof(values));
 }
@@ -31,24 +31,25 @@ int AI::judge(int &x, int &y, const Board &b, int depth)
 {
     if (depth == 0)
         return countVal(b);
-    AI * enemy = new AI(opposite(self));
     x = y = -1;
-    int max = 1 << 31;
+    int res = 1 << 31;
+    if (depth % 2 == 0)
+        res--;
     for (int i = 0; i < size; ++i)
         for (int j = 0; j < size; ++j) {
             if (!b.canPut(i, j, self))
                 continue;
             int _x, _y;
-            int c = -enemy->judge(_x, _y, b.put(i, j, self), depth - 1);
-            if (c > max) {
+            int c = judge(_x, _y, b.put(i, j, self), depth - 1);
+            if ((depth % 2 == 1 && c > res) ||
+                (depth % 2 == 0 && c < res)) {
                 x = i;
                 y = j;
-                max = c;
+                res = c;
             }
         }
-    delete enemy;
     if (x == -1 && y == -1)
         return countVal(b);
     else
-        return max;
+        return res;
 }
